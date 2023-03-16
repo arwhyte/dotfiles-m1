@@ -1,0 +1,21 @@
+# Apple
+.DS_Store
+
+# Git: do not commit username and credentials
+**/bash/.bash.local
+**/git/.gitconfig.local
+
+# Shell: Do not commit history files
+**/bash/.bash_history
+**/zsh/.zsh_history
+
+# Intellij
+.idea/
+*.iml
+*.ipr
+*.iws
+*.uml
+out/
+
+# VS Code
+*.code-workspace

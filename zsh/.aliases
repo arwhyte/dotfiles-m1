@@ -1,0 +1,48 @@
+# APP START
+
+# PIP
+
+# See https://dougie.io/answers/pip-update-all-packages/
+alias pip_upgrade="python3 -m pip freeze --user | cut -d'=' -f1 | xargs -n1 python3 -m pip install -U"
+alias pip_upgrade_venv="python3 -m pip freeze | cut -d'=' -f1 | xargs -n1 python3 -m pip install -U"
+
+# NAVIGATION
+
+# Standard directories
+DEV='~/Development'
+DOCS='~/Documents'
+PICS='~/Pictures'
+
+alias dev="cd $DEV"
+alias docs="cd $DOCS"
+alias pics="cd $PICS"
+
+# Code repos by account
+GITHUB="$DEV/github"
+alias github="cd $GITHUB"
+
+ARWHYTE="$GITHUB/arwhyte"
+alias arwhyte="cd $ARWHYTE"
+alias dotfiles="cd $ARWHYTE/dotfiles-m1"
+alias scripts="cd $ARWHYTE/scripts"
+
+CSEV="$GITHUB/csev"
+alias csev="cd $CSEV"
+alias tsugi="cd $CSEV/tsugiproject"
+
+UMSI="$GITHUB/umsi-arwhyte"
+alias umsi="cd $UMSI"
+alias si506="cd $UMSI/SI506"
+alias si506_site="cd $UMSI/SI506-site"
+alias si664="cd $UMSI/SI664"
+alias siads593="cd $UMSI/SIADS593"
+alias siads593_site="cd $UMSI/SIADS593-site"
+alias siads611="cd $UMSI/SIADS611"
+
+# zsh
+alias ohmyzsh='cd ~/.oh-my-zsh'
+
+# SWITCHES
+
+# alias ls='ls -laGH'
+# alias ls="/bin/ls -la"
