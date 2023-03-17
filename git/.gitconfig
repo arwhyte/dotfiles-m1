@@ -1,11 +1,11 @@
 [user]
-	name = Anthony Whyte
-	email = anthwhyte@gmail.com
-	signingkey = 2349082889F677CA
-[gpg]
-        program = /opt/homebrew/bin/gpg
-[pull]
-	rebase = false
-	ff = true
+    name = Anthony Whyte
+    email = anthwhyte@gmail.com
+    signingkey = 2349082889F677CA
 [commit]
-	gpgsign = true
+    gpgsign = true
+[gpg]
+    program = /opt/homebrew/bin/gpg
+[pull]
+    rebase = false
+    ff = true
