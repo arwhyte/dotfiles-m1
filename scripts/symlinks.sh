@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # Command options
 # -s create symbolic link
