@@ -12,9 +12,11 @@ alias pip_upgrade_venv="python3 -m pip freeze | cut -d'=' -f1 | xargs -n1 python
 DEV='~/Development'
 DOCS='~/Documents'
 PICS='~/Pictures'
+DROPBOX='/Users/arwhyte/Library/CloudStorage/Dropbox-Personal'
 
 alias dev="cd $DEV"
 alias docs="cd $DOCS"
+alias dbx="cd $DROPBOX"
 alias pics="cd $PICS"
 
 # Code repos by account
