@@ -98,7 +98,9 @@ export GPG_TTY=$(tty)
 # GPG_TTY=$TTY
 
 # Python (Apple silicon)
-export PATH="/opt/homebrew/opt/python@3.11/libexec/bin:$PATH"
+export PATH="/opt/homebrew/opt/python@3.12/libexec/bin:$PATH"
+# export PATH="/opt/homebrew/opt/python@3.11/libexec/bin:$PATH"
+# export PATH="/opt/homebrew/opt/python@3.10/libexec/bin:$PATH"
 
 # nvm
 export NVM_DIR="$HOME/.nvm"
