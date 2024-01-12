@@ -97,15 +97,19 @@ source $ZSH/oh-my-zsh.sh
 export GPG_TTY=$(tty)
 # GPG_TTY=$TTY
 
-# Python (Apple silicon)
-export PATH="/opt/homebrew/opt/python@3.12/libexec/bin:$PATH"
-# export PATH="/opt/homebrew/opt/python@3.11/libexec/bin:$PATH"
-# export PATH="/opt/homebrew/opt/python@3.10/libexec/bin:$PATH"
-
 # nvm
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # loads nvm bash_completion
+
+# pyenv
+export PYENV_ROOT="$HOME/.pyenv"
+[[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
+
+# Homebrew Python (Apple silicon)
+# export PATH="/opt/homebrew/opt/python@3.12/libexec/bin:$PATH"
+# export PATH="/opt/homebrew/opt/python@3.11/libexec/bin:$PATH"
+# export PATH="/opt/homebrew/opt/python@3.10/libexec/bin:$PATH"
 
 # Set personal aliases, overriding those provided by oh-my-zsh libs,
 # plugins, and themes. Aliases can be placed here, though oh-my-zsh
@@ -116,7 +120,6 @@ export NVM_DIR="$HOME/.nvm"
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
-# TODO
 if [ -f ~/Development/github/arwhyte/dotfiles-m1/zsh/.aliases ]; then
     source ~/Development/github/arwhyte/dotfiles-m1/zsh/.aliases
 else
