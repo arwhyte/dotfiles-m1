@@ -105,7 +105,7 @@ export NVM_DIR="$HOME/.nvm"
 # pyenv
 export PYENV_ROOT="$HOME/.pyenv"
 [[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
-py
+
 # Homebrew Python (Apple silicon)
 # export PATH="/opt/homebrew/opt/python@3.12/libexec/bin:$PATH"
 # export PATH="/opt/homebrew/opt/python@3.11/libexec/bin:$PATH"
