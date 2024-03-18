@@ -93,27 +93,6 @@ source $ZSH/oh-my-zsh.sh
 # Compilation flags
 # export ARCHFLAGS="-arch x86_64"
 
-# Brewfile
-export HOMEBREW_BREWFILE="$HOME/Development/github/arwhyte/dotfiles-m1/brew/Brewfile"
-
-# GPG setup
-export GPG_TTY=$(tty)
-# GPG_TTY=$TTY
-
-# nvm
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # loads nvm bash_completion
-
-# pyenv
-export PYENV_ROOT="$HOME/.pyenv"
-[[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
-
-# Homebrew Python (Apple silicon)
-# export PATH="/opt/homebrew/opt/python@3.12/libexec/bin:$PATH"
-# export PATH="/opt/homebrew/opt/python@3.11/libexec/bin:$PATH"
-# export PATH="/opt/homebrew/opt/python@3.10/libexec/bin:$PATH"
-
 # Set personal aliases, overriding those provided by oh-my-zsh libs,
 # plugins, and themes. Aliases can be placed here, though oh-my-zsh
 # users are encouraged to define aliases within the ZSH_CUSTOM folder.
@@ -122,9 +101,3 @@ export PYENV_ROOT="$HOME/.pyenv"
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
-
-if [ -f ~/Development/github/arwhyte/dotfiles-m1/zsh/.aliases ]; then
-    source ~/Development/github/arwhyte/dotfiles-m1/zsh/.aliases
-else
-    print "ERROR: ~/Development/github/arwhyte/dotfiles-m1/zsh/.aliases not found."
-fi
