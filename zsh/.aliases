@@ -3,8 +3,10 @@
 # PIP
 
 # See https://dougie.io/answers/pip-update-all-packages/
-alias pip_upgrade="python3 -m pip freeze --user | cut -d'=' -f1 | xargs -n1 python3 -m pip install -U"
-alias pip_upgrade_venv="python3 -m pip freeze | cut -d'=' -f1 | xargs -n1 python3 -m pip install -U"
+alias brew_bundle_install="brew bundle install --file=~/Development/github/arwhyte/dotfiles-m1/brew/Brewfile"
+alias brew_bundle_dump="brew bundle dump --force --file=~/Development/github/arwhyte/dotfiles-m1/brew/Brewfile"
+alias pip_update="python3 -m pip freeze --user | cut -d'=' -f1 | xargs -n1 python3 -m pip install -U"
+alias pip_update_venv="python3 -m pip freeze | cut -d'=' -f1 | xargs -n1 python3 -m pip install -U"
 
 # NAVIGATION
 

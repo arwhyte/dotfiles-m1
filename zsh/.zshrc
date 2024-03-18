@@ -93,6 +93,9 @@ source $ZSH/oh-my-zsh.sh
 # Compilation flags
 # export ARCHFLAGS="-arch x86_64"
 
+# Brewfile
+export HOMEBREW_BREWFILE="$HOME/Development/github/arwhyte/dotfiles-m1/brew/Brewfile"
+
 # GPG setup
 export GPG_TTY=$(tty)
 # GPG_TTY=$TTY
