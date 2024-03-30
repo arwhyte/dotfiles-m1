@@ -13,7 +13,6 @@ brew "pipx"
 brew "postgresql@14", restart_service: true
 brew "pyenv"
 brew "pyenv-virtualenv"
-brew "uv"
 brew "wget"
 cask "calibre"
 cask "cyberduck"
