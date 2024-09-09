@@ -20,8 +20,8 @@ export PYENV_ROOT="$HOME/.pyenv"
 
 # pipx
 # https://pipx.pypa.io/stable/installation/
-export PATH="$PATH:/Users/arwhyte/.local/bin"
-export PIPX_HOME="$HOME/.local/pipx"
+# export PATH="$PATH:/Users/arwhyte/.local/bin"
+# export PIPX_HOME="$HOME/.local/pipx"
 
 # Homebrew Python (Apple silicon)
 # export PATH="/opt/homebrew/opt/python@3.12/libexec/bin:$PATH"
