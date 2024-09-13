@@ -11,7 +11,6 @@ CSEV="${GITHUB}/csev"
 UMSI="${GITHUB}/umsi-arwhyte"
 
 # COMMANDS
-
 # See https://dougie.io/answers/pip-update-all-packages/
 alias brew_bundle_install="brew bundle install --file=${GITHUB}/arwhyte/dotfiles-m1/brew/Brewfile"
 alias brew_bundle_dump="brew bundle dump --force --file=${GITHUB}/arwhyte/dotfiles-m1/brew/Brewfile"
@@ -27,7 +26,6 @@ alias pip_update="python3 -m pip freeze --user | cut -d'=' -f1 | xargs -n1 pytho
 alias pip_update_venv="python3 -m pip freeze | cut -d'=' -f1 | xargs -n1 python3 -m pip install -U"
 
 # NAVIGATION
-
 alias dev="cd $DEV"
 alias docs="cd $DOCS"
 alias dbx="cd $DROPBOX"
