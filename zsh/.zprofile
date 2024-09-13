@@ -1,6 +1,8 @@
 eval "$(/opt/homebrew/bin/brew shellenv)"
-eval "$(pyenv init -)"
-eval "$(pyenv virtualenv-init -)"
+
+# RETIRED pyenv
+# eval "$(pyenv init -)"
+# eval "$(pyenv virtualenv-init -)"
 
 # Brewfile
 export HOMEBREW_BREWFILE="$HOME/Development/github/arwhyte/dotfiles-m1/brew/Brewfile"
