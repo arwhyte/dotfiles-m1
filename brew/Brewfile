@@ -10,6 +10,7 @@ brew "nano"
 brew "pandoc"
 brew "postgresql@14", restart_service: true
 brew "wget"
+cask "anki"
 cask "calibre"
 cask "cyberduck"
 cask "datagrip"
