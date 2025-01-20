@@ -1,9 +1,14 @@
-#!/bin/bash
+#!/usr/bin/env zsh?
+
 
 # Command options
 # -s create symbolic link
 # -f continue with other symlinking if error occurs
 # -n avoid symlinking a symlink
+
+# brew
+rm -rf /Users/arwhyte/brew.sh
+ln -nfs /Users/arwhyte/Development/github/arwhyte/dotfiles-m1/scripts/brew.sh /Users/arwhyte/brew.sh
 
 # git
 rm -rf /Users/arwhyte/.gitconfig
