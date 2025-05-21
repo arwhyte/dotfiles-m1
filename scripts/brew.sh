@@ -18,7 +18,7 @@ printf "\nINFO: UPDATE HOMEBREW PACKAGES/CASKS (brew update)\n"
 brew update
 
 printf "\nINFO: UPGRADE HOMEBREW PACKAGES/CASKS (brew upgrade)\n"
-brew upgrade
+brew upgrade --greedy
 
 printf "\nINFO: CHECK HOMEBREW INSTALLS (brew doctor)\n"
 brew doctor
