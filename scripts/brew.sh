@@ -1,11 +1,11 @@
-#!/usr/bin/env zsh?
+#!/usr/bin/env zsh
 
 # Notes
 # printf employed due to presence of escape characters
 
 FILEPATH="/Users/arwhyte/Development/github/arwhyte/dotfiles-m1/brew/Brewfile"
 
-printf "INFO: HOMEBREW INSTALLED PACKAGES/CASKS (brew list)\n"
+printf "\nINFO: HOMEBREW INSTALLED PACKAGES/CASKS (brew list)\n"
 brew list
 
 printf "\nINFO: HOMEBREW OUTDATED PACKAGES/CASKS (brew outdated))\n"
@@ -31,3 +31,5 @@ brew bundle dump --force --file=$FILEPATH
 
 printf "\nINFO: HOMEBREW MANAGED SERVICES (brew services list)\n"
 brew services list
+
+printf "\n"
