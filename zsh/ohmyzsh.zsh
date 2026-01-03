@@ -1,58 +1,14 @@
-# ~/.zshrc
+# zsh/ohmyzsh.zsh
 
-# Interactive guard
-[[ -o interactive ]] || return
+export ZSH="$HOME/.oh-my-zsh"
+ZSH_THEME="eastwood"
+# ZSH_THEME="robbyrussell"
+plugins=(git)
 
-ZSH_CONF="$HOME/Development/github/arwhyte/dotfiles-m1/zsh"
-
-# Order matters (env, tools, ohmyzsh, aliases)
-source "$ZSH_CONF/env.zsh"
-source "$ZSH_CONF/tools.zsh"
-source "$ZSH_CONF/ohmyzsh.zsh"
-source "$ZSH_CONF/aliases.zsh"
+source $ZSH/oh-my-zsh.sh
 
 
-# postgresql
-# export PATH="/opt/homebrew/opt/postgresql@17/bin:$PATH"
-
-# uv
-# export PATH="/Users/arwhyte/.local/bin:$PATH" (obsolete)
-# export PATH="$HOME/.local/share/uv/bin:$PATH"
-
-# Brewfile
-# export HOMEBREW_BREWFILE="$HOME/Development/github/arwhyte/dotfiles-m1/brew/Brewfile"
-
-# GPG setup
-# export GPG_TTY=$(tty)
-# GPG_TTY=$TTY
-
-# nvm
-# export NVM_DIR="$HOME/.nvm"
-# [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # loads nvm
-# [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # loads nvm bash_completion
-
-# RETIRED pyenv
-# export PYENV_ROOT="$HOME/.pyenv"
-# [[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
-
-# RETIRED pipx
-# https://pipx.pypa.io/stable/installation/
-# export PATH="$PATH:/Users/arwhyte/.local/bin"
-# export PIPX_HOME="$HOME/.local/pipx"
-
-# RETIRED Homebrew Python (Apple silicon)
-# export PATH="/opt/homebrew/opt/python@3.12/libexec/bin:$PATH"
-# export PATH="/opt/homebrew/opt/python@3.11/libexec/bin:$PATH"
-# export PATH="/opt/homebrew/opt/python@3.10/libexec/bin:$PATH"
-
-# Aliases
-# if [ -f ~/Development/github/arwhyte/dotfiles-m1/zsh/.aliases ]; then
-#     source ~/Development/github/arwhyte/dotfiles-m1/zsh/.aliases
-# else
-#     print "ERROR: ~/Development/github/arwhyte/dotfiles-m1/zsh/.aliases not found."
-# fi
-
-# OH MY ZSH CONFIGURATION
+# OH MY ZSH CONFIGURATION (for reference)
 
 # If you come from bash you might have to change your $PATH.
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
@@ -157,6 +113,3 @@ source "$ZSH_CONF/aliases.zsh"
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
-
-# Rust
-# . "$HOME/.cargo/env"
