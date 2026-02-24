@@ -1,5 +1,5 @@
 # PostgreSQL
-export PATH="/opt/homebrew/opt/postgresql@17/bin:$PATH"
+export PATH="/opt/homebrew/opt/postgresql@18/bin:$PATH"
 
 # uv
 export PATH="$HOME/.local/bin:$PATH"

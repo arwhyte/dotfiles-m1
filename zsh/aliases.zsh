@@ -2,7 +2,7 @@
 
 [[ -o interactive ]] || return
 
-# Directory paths (do NOT set HOME)
+# NAVIGATION
 DEV="$HOME/Development"
 DOCS="$HOME/Documents"
 DROPBOX="$HOME/Library/CloudStorage/Dropbox-Personal"
@@ -13,17 +13,6 @@ ARWHYTE="$GITHUB/arwhyte"
 CSEV="$GITHUB/csev"
 UMSI="$GITHUB/umsi-arwhyte"
 
-# Brew
-alias brew_bundle_install='brew bundle install --file="$GITHUB/arwhyte/dotfiles-m1/brew/Brewfile"'
-alias brew_bundle_dump='brew bundle dump --force --file="$GITHUB/arwhyte/dotfiles-m1/brew/Brewfile"'
-
-# pip (use active interpreter, uv-friendly)
-alias pip_update='python -m pip freeze --user | cut -d= -f1 | xargs -n1 python -m pip install -U'
-# alias pip_update="python3 -m pip freeze --user | cut -d'=' -f1 | xargs -n1 python3 -m pip install -U"
-alias pip_update_venv='python -m pip freeze | cut -d= -f1 | xargs -n1 python -m pip install -U'
-# alias pip_update_venv="python3 -m pip freeze | cut -d'=' -f1 | xargs -n1 python3 -m pip install -U"
-
-# Navigation
 alias dev='cd "$DEV"'
 alias docs='cd "$DOCS"'
 alias dbx='cd "$DROPBOX"'
@@ -48,15 +37,29 @@ alias siads611='cd "$UMSI/SIADS611"'
 # zsh helpers
 alias ohmyzsh='cd "$HOME/.oh-my-zsh"'
 
-# OLD .aliases content below (for reference)
+# SWITCHES
 
-# mypy
+# alias ls='ls -laGH'
+# alias ls="/bin/ls -la"
+
+
+# TOOLS
+
+# Brew
+alias brew_bundle_install='brew bundle install --file="$GITHUB/arwhyte/dotfiles-m1/brew/Brewfile"'
+alias brew_bundle_dump='brew bundle dump --force --file="$GITHUB/arwhyte/dotfiles-m1/brew/Brewfile"'
+
+# pip (use active interpreter, uv-friendly)
+alias pip_update='python -m pip freeze --user | cut -d= -f1 | xargs -n1 python -m pip install -U'
+# alias pip_update="python3 -m pip freeze --user | cut -d'=' -f1 | xargs -n1 python3 -m pip install -U"
+alias pip_update_venv='python -m pip freeze | cut -d= -f1 | xargs -n1 python -m pip install -U'
+# alias pip_update_venv="python3 -m pip freeze | cut -d'=' -f1 | xargs -n1 python3 -m pip install -U"
+
+# mypy (obsolete)
 # alias mypy_umpyutl="mypy --python-executable \
 #       ${HOME}/.pyenv/versions/3.12.2/envs/umpyutl_env/bin/python ${UMSI}/umpyutl/src/umpyutl \
 #       --warn-redundant-casts --warn-return-any --warn-unreachable --warn-unused-ignores \
 #       --show-absolute-path --show-error-codes --show-error-context --pretty"
 
-# SWITCHES
-
-# alias ls='ls -laGH'
-# alias ls="/bin/ls -la"
+# uv
+alias vnv='uv venv --python --managed-python && source .venv/bin/activate'
