@@ -1,12 +1,8 @@
 brew "git"
-brew "gtk+3"
-brew "gnumeric"
 brew "gnupg"
 brew "hugo"
-brew "mdbtools"
 brew "nano"
 brew "pandoc"
-brew "postgresql@17"
 brew "postgresql@18", restart_service: :changed
 brew "wget"
 cask "anki"
