@@ -18,8 +18,11 @@ import argparse
 import logging
 import subprocess
 import sys
+
 from datetime import datetime
 from pathlib import Path
+
+LOGGER = logging.getLogger("pg_upgrade")
 
 
 def parse_args() -> argparse.Namespace:
@@ -48,42 +51,7 @@ def parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
-def setup_logger(old_ver: str, new_ver: str) -> logging.Logger:
-    """Set up logging to console and file.
-
-    Parameters:
-        old_ver (str): Old PostgreSQL version.
-        new_ver (str): New PostgreSQL version.
-
-    Returns:
-        logging.Logger: Configured logger instance.
-    """
-
-    logger = logging.getLogger("pg_upgrade")
-    logger.setLevel(logging.INFO)
-    logger.propagate = False
-
-    log_file = Path.cwd() / f"pg_upgrade_{old_ver}_to_{new_ver}.log"
-
-    formatter = logging.Formatter(
-        "%(asctime)s [%(levelname)s] %(message)s", "%Y-%m-%d %H:%M:%S"
-    )
-
-    # console
-    ch = logging.StreamHandler(sys.stdout)
-    ch.setFormatter(formatter)
-    logger.addHandler(ch)
-
-    # file
-    fh = logging.FileHandler(log_file, encoding="utf-8")
-    fh.setFormatter(formatter)
-    logger.addHandler(fh)
-
-    logger.info("Logging to %s", log_file)
-    return logger
-
-
-def run(cmd: list[str], logger: logging.Logger) -> None:
+def run_cmd(cmd: list[str], logger: logging.Logger) -> None:
     """Run a command and log it.
 
     Parameters:
@@ -93,12 +61,19 @@ def run(cmd: list[str], logger: logging.Logger) -> None:
     Returns:
         None
     """
-    logger.info("Running: %s", " ".join(cmd))
-    subprocess.run(cmd, check=True)
+
+    try:
+        logger.info("Running: %s", " ".join(cmd))
+        subprocess.run_cmd(cmd, check=True)
+    except subprocess.CalledProcessError as e:
+        logger.error(
+            "Command failed with exit code %d: %s", e.returncode, " ".join(cmd)
+        )
+        sys.exit(e.returncode)
 
 
 def main() -> int:
-    """Main function to perform PostgreSQL upgrade.
+    """Entry point. Orchestrates the update process.
 
     Parameters:
         None
@@ -111,63 +86,81 @@ def main() -> int:
     old_ver = args.old_version
     new_ver = args.new_version
 
-    logger = setup_logger(old_ver, new_ver)
-    logger.info("Starting PostgreSQL upgrade: %s -> %s", old_ver, new_ver)
+    if not LOGGER.handlers:  # check if already configured
+        LOGGER.setLevel(logging.INFO)
+        LOGGER.propagate = False
+
+        log_file = Path.cwd().joinpath(f"pg_upgrade_{old_ver}_to_{new_ver}.log")
+
+        formatter = logging.Formatter(
+            "%(asctime)s [%(levelname)s] %(message)s", "%Y-%m-%d %H:%M:%S"
+        )
+
+        # console
+        stream_handler = logging.StreamHandler(sys.stdout)
+        stream_handler.setFormatter(formatter)
+        LOGGER.addHandler(stream_handler)
+
+        # file
+        file_handler = logging.FileHandler(log_file, encoding="utf-8")
+        file_handler.setFormatter(formatter)
+        LOGGER.addHandler(file_handler)
+
+    LOGGER.info("Logging to %s", log_file)
+
+    LOGGER.info("Starting PostgreSQL upgrade: %s -> %s", old_ver, new_ver)
 
     # Homebrew prefix
-    brew_prefix = subprocess.run(
+    brew_prefix = subprocess.run_cmd(
         ["brew", "--prefix"], check=True, stdout=subprocess.PIPE, text=True
     ).stdout.strip()
 
-    logger.info("Homebrew prefix: %s", brew_prefix)
+    LOGGER.info("Homebrew prefix: %s", brew_prefix)
 
     old_formula = f"postgresql@{old_ver}"
     new_formula = f"postgresql@{new_ver}"
 
-    # old_bindir = Path(brew_prefix) / f"opt/{old_formula}/bin"
     old_bindir = Path(brew_prefix).joinpath("opt", old_formula, "bin")
-
-    # new_bindir = Path(brew_prefix) / f"opt/{new_formula}/bin"
     new_bindir = Path(brew_prefix).joinpath("opt", new_formula, "bin")
 
-    # old_datadir = Path(brew_prefix) / f"var/postgresql@{old_ver}"
-    old_datadir = Path(brew_prefix).joinpath("var", f"postgresql@{old_ver}")
+    LOGGER.info("Old bindir: %s", old_bindir)
+    LOGGER.info("New bindir: %s", new_bindir)
 
-    # new_datadir = Path(brew_prefix) / f"var/postgresql@{new_ver}"
+    old_datadir = Path(brew_prefix).joinpath("var", f"postgresql@{old_ver}")
     new_datadir = Path(brew_prefix).joinpath("var", f"postgresql@{new_ver}")
 
-    logger.info("Old bindir: %s", old_bindir)
-    logger.info("New bindir: %s", new_bindir)
-    logger.info("Old datadir: %s", old_datadir)
-    logger.info("New datadir: %s", new_datadir)
+    LOGGER.info("Old datadir: %s", old_datadir)
+    LOGGER.info("New datadir: %s", new_datadir)
 
     # Install new version of postgreSQL if not already installed
-    logger.info("Ensuring %s is installed via Homebrew...", new_formula)
-    result_new = subprocess.run(
+    LOGGER.info("Ensuring %s is installed via Homebrew...", new_formula)
+
+    result_new = subprocess.run_cmd(
         ["brew", "list", "--versions", new_formula],
         stdout=subprocess.PIPE,
         stderr=subprocess.DEVNULL,
         text=True,
     )
+
     if result_new.returncode != 0:
-        logger.info("%s not installed. Installing with Homebrew...", new_formula)
-        run(["brew", "install", new_formula], logger)
+        LOGGER.info("%s not installed. Installing with Homebrew...", new_formula)
+        run_cmd(["brew", "install", new_formula], LOGGER)
     else:
-        logger.info("%s already installed.", new_formula)
+        LOGGER.info("%s already installed.", new_formula)
 
     # Refresh new_bindir now that we’re sure it’s installed
     new_bindir = Path(brew_prefix).joinpath("opt", new_formula, "bin")
 
     # Ensure old PostgreSQL service is running for backup
-    logger.info(
+    LOGGER.info(
         "Ensuring old PostgreSQL service is running for backup: %s", old_formula
     )
+
     # If it's already running, this is a no-op; if not, it starts it.
-    run(["brew", "services", "start", old_formula], logger)
+    run_cmd(["brew", "services", "start", old_formula], LOGGER)
 
     # Backup existing data with pg_dumpall
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    # backup_file = Path.home() / f"pg_dumpall_{old_ver}_to_{new_ver}_{timestamp}.sql"
     backup_file = Path.home().joinpath(
         f"pg_dumpall_{old_ver}_to_{new_ver}_{timestamp}.sql"
     )
@@ -175,30 +168,30 @@ def main() -> int:
     # pg_dumpall = old_bindir / "pg_dumpall"
     pg_dumpall = old_bindir.joinpath("pg_dumpall")
 
-    logger.info("Creating backup with %s", pg_dumpall)
-    logger.info("Backup file: %s", backup_file)
+    LOGGER.info("Creating backup with %s", pg_dumpall)
+    LOGGER.info("Backup file: %s", backup_file)
 
     with backup_file.open("w", encoding="utf-8") as f:
-        subprocess.run([str(pg_dumpall)], check=True, stdout=f)
+        subprocess.run_cmd([str(pg_dumpall)], check=True, stdout=f)
 
-    logger.info("Backup complete.")
+    LOGGER.info("Backup complete.")
 
     # Stop PostgreSQL service
-    run(["brew", "services", "stop", old_formula], logger)
+    run_cmd(["brew", "services", "stop", old_formula], LOGGER)
 
     # Initialize new data directory if it doesn't exist or is empty
     initdb = new_bindir / "initdb"
-    logger.info("Initializing new data directory (if empty): %s", new_datadir)
+    LOGGER.info("Initializing new data directory (if empty): %s", new_datadir)
 
     if not new_datadir.exists() or not any(new_datadir.iterdir()):
-        run([str(initdb), "-D", str(new_datadir)], logger)
+        run_cmd([str(initdb), "-D", str(new_datadir)], LOGGER)
     else:
-        logger.info("Data directory exists; skipping initdb.")
+        LOGGER.info("Data directory exists; skipping initdb.")
 
     # Run pg_upgrade
     pg_upgrade = new_bindir / "pg_upgrade"
-    logger.info("Running pg_upgrade...")
-    run(
+    LOGGER.info("Running pg_upgrade...")
+    run_cmd(
         [
             str(pg_upgrade),
             f"--old-bindir={old_bindir}",
@@ -206,16 +199,16 @@ def main() -> int:
             f"--old-datadir={old_datadir}",
             f"--new-datadir={new_datadir}",
         ],
-        logger,
+        LOGGER,
     )
 
     # Start new PostgreSQL service
-    run(["brew", "services", "start", new_formula], logger)
+    run_cmd(["brew", "services", "start", new_formula], LOGGER)
 
-    logger.info("Upgrade complete: %s -> %s", old_ver, new_ver)
-    logger.info("Backup stored at: %s", backup_file)
+    LOGGER.info("Upgrade complete: %s -> %s", old_ver, new_ver)
+    LOGGER.info("Backup stored at: %s", backup_file)
 
-    logger.info(
+    LOGGER.info(
         f"WARN: Update zsh/env.zsh PATH variable to new postgresql@{new_ver}/bin."
     )
 

@@ -6,26 +6,38 @@
 # -f continue with other symlinking if error occurs
 # -n avoid symlinking a symlink
 
+# Base Paths
+HOME="/Users/arwhyte"
+BASE_PATH="${HOME}/Development/github/arwhyte/dotfiles-m1"
+
 # brew
-rm -rf /Users/arwhyte/brew.sh
-ln -nfs /Users/arwhyte/Development/github/arwhyte/dotfiles-m1/scripts/brew.sh /Users/arwhyte/brew.sh
+rm -rf ${HOME}/brew.sh
+ln -nfs ${BASE_PATH}/scripts/brew.sh ${HOME}/brew.sh
 
 # git
-rm -rf /Users/arwhyte/.gitconfig
-ln -nfs /Users/arwhyte/Development/github/arwhyte/dotfiles-m1/git/.gitconfig /Users/arwhyte/.gitconfig
-# rm -rf /Users/arwhyte/.gitconfig.local
-# ln -nfs /Users/arwhyte/Development/github/arwhyte/dotfiles-m1/git/.gitconfig.local /Users/arwhyte/.gitconfig.local
-# rm -rf /Users/arwhyte/.gitignore.global
-# ln -nfs /Users/arwhyte/Development/github/arwhyte/dotfiles-m1/git/.gitignore.global /Users/arwhyte/.gitignore.global
+rm -rf ${HOME}/.gitconfig
+ln -nfs ${BASE_PATH}/git/.gitconfig ${HOME}/.gitconfig
+# rm -rf ${HOME}/.gitconfig.local
+# ln -nfs ${BASE_PATH}/git/.gitconfig.local ${HOME}/.gitconfig.local
+# rm -rf ${HOME}/.gitignore.global
+# ln -nfs ${BASE_PATH}/git/.gitignore.global ${HOME}/.gitignore.global
 
 # psql
-rm -rf /Users/arwhyte/.psqlrc
-ln -nfs /Users/arwhyte/Development/github/arwhyte/dotfiles-m1/psql/.psqlrc /Users/arwhyte/.psqlrc
+rm -rf ${HOME}/.psqlrc
+ln -nfs ${BASE_PATH}/psql/.psqlrc ${HOME}/.psqlrc
+
+# scripts
+rm -rf ${HOME}/update.sh
+ln -nfs ${BASE_PATH}/scripts/update.sh ${HOME}/update.sh
+rm -rf ${HOME}/pg_upgrade.py
+ln -nfs ${BASE_PATH}/scripts/pg_upgrade.py ${HOME}/pg_upgrade.py
+rm -rf ${HOME}/update.py
+ln -nfs ${BASE_PATH}/scripts/update.py ${HOME}/update.py
 
 # zsh
-rm -rf /Users/arwhyte/.zprofile
-ln -nfs /Users/arwhyte/Development/github/arwhyte/dotfiles-m1/zsh/.zprofile /Users/arwhyte/.zprofile
-rm -rf /Users/arwhyte/.zshenv
-ln -nfs /Users/arwhyte/Development/github/arwhyte/dotfiles-m1/zsh/.zshenv /Users/arwhyte/.zshenv
-rm -rf /Users/arwhyte/.zshrc
-ln -nfs /Users/arwhyte/Development/github/arwhyte/dotfiles-m1/zsh/.zshrc /Users/arwhyte/.zshrc
+rm -rf ${HOME}/.zprofile
+ln -nfs ${BASE_PATH}/zsh/.zprofile ${HOME}/.zprofile
+rm -rf ${HOME}/.zshenv
+ln -nfs ${BASE_PATH}/zsh/.zshenv ${HOME}/.zshenv
+rm -rf ${HOME}/.zshrc
+ln -nfs ${BASE_PATH}/zsh/.zshrc ${HOME}/.zshrc
