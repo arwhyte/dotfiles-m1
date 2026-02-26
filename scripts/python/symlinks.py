@@ -19,7 +19,7 @@ LINKS: tuple[tuple[pathlib.Path, pathlib.Path], ...] = (
     (HOME / ".zshenv", BASE_PATH / "zsh/.zshenv"),
     (HOME / ".zshrc", BASE_PATH / "zsh/.zshrc"),
 )
-LOGGER = logging.getLogger("update")
+LOGGER = logging.getLogger("symlinks")
 
 
 def create_symlink(src: pathlib.Path, dst: pathlib.Path) -> None:
