@@ -25,7 +25,9 @@ from script_logger import ScriptLogger
 
 
 LOG_PATH = Path.cwd().joinpath("logs", "pg_upgrade.log")
-LOGGER = ScriptLogger.log_to_console_and_file("pg_upgrade", log_file=LOG_PATH)
+LOGGER = ScriptLogger.log_to_console_and_file(
+    "pg_upgrade", log_file=LOG_PATH, colorize=True
+)
 
 
 def parse_args() -> argparse.Namespace:

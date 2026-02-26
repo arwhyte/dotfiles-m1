@@ -18,7 +18,7 @@ from script_logger import ScriptLogger
 
 HOME = Path.home()
 BREWFILE_PATH = HOME.joinpath("Development/github/arwhyte/dotfiles-m1/brew/Brewfile")
-LOGGER = ScriptLogger.log_to_console("update")
+LOGGER = ScriptLogger.log_to_console("update", colorize=True)
 
 
 def run_cmd(cmd: list[str], ignore_errors: bool = False) -> None:

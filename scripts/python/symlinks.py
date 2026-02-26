@@ -51,7 +51,7 @@ def main() -> None:
         None
     """
 
-    log = ScriptLogger("symlinks", log_to_console=True)
+    log = ScriptLogger("symlinks", log_to_console=True, colorize=True)
 
     for dst, src in LINKS:
         log.info(f"Linking {dst} → {src}")

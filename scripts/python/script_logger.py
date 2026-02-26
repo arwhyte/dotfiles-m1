@@ -17,9 +17,68 @@ from pathlib import Path
 from typing import Optional
 
 
+class _LevelColorFormatter(logging.Formatter):
+    """Formatter that adds ANSI color codes to the level name only.
+
+    Attributes:
+        color_map (dict[int, str]): Mapping of log levels to ANSI color codes.
+        reset_code (str): ANSI code to reset color after the level name.
+    """
+
+    def __init__(
+        self,
+        fmt: str,
+        datefmt: str,
+        *,
+        color_map: dict[int, str],
+        reset_code: str = "\033[0m",
+    ) -> None:
+
+        super().__init__(fmt, datefmt)
+        self._color_map = color_map
+        self._reset_code = reset_code
+
+    def format(self, record: logging.LogRecord) -> str:
+        """Override to inject color codes into the level name.
+
+        Parameters:
+            record (logging.LogRecord): The log record to format.
+        Returns:
+            str: The formatted log message with color codes applied to the level name.
+        """
+
+        original_levelname = record.levelname
+        color = self._color_map.get(record.levelno)
+
+        if color:
+            record.levelname = f"{color}{original_levelname}{self._reset_code}"
+
+        try:
+            return super().format(record)
+        finally:
+            record.levelname = original_levelname
+
+
 class ScriptLogger:
+    """Helper class to create and manage loggers for scripts with consistent formatting.
+
+    Attributes:
+        msg_format (str): Log message format string.
+        date_format (str): Log date format string.
+        level_colors (dict[int, str]): Mapping of log levels to ANSI color codes for console output.
+        reset_code (str): ANSI code to reset color after the level name.
+    """
+
     msg_format = "%(asctime)s [%(levelname)s] %(message)s"
     date_format = "%Y-%m-%d %H:%M:%S"
+    level_colors: dict[int, str] = {
+        logging.DEBUG: "\033[36m",  # cyan
+        logging.INFO: "\033[32m",  # green
+        logging.WARNING: "\033[33m",  # yellow
+        logging.ERROR: "\033[31m",  # red
+        logging.CRITICAL: "\033[35m",  # magenta
+    }
+    reset_code = "\033[0m"
 
     def __init__(
         self,
@@ -30,8 +89,8 @@ class ScriptLogger:
         log_to_file: Optional[Path | str] = None,
         propagate: bool = False,
         formatter: Optional[logging.Formatter] = None,
+        colorize: bool = False,
     ) -> None:
-
         """
         Create (or retrieve) a logger by name and configure it once.
 
@@ -42,6 +101,7 @@ class ScriptLogger:
             log_to_file (Path | str): Optional file path to also log to.
             propagate (bool): Whether to propagate to ancestor loggers.
             formatter (logging.Formatter): Optional custom formatter; if omitted, uses defaults.
+            colorize (bool): If True, colorizes the log level in console output.
 
         Returns:
             None
@@ -54,6 +114,7 @@ class ScriptLogger:
             self.msg_format,
             self.date_format,
         )
+        self._colorize = colorize
         self._configure(log_to_console=log_to_console, log_to_file=log_to_file)
 
     def _configure(
@@ -62,6 +123,15 @@ class ScriptLogger:
         log_to_console: bool,
         log_to_file: Optional[Path | str],
     ) -> None:
+        """Configure the logger with console and/or file handlers.
+
+        Parameters:
+            log_to_console (bool): Whether to add a console handler.
+            log_to_file (Path | str | None): Optional file path to add a file handler.
+
+        Returns:
+            None
+        """
 
         if self._logger.handlers:
             return  # Avoid adding duplicate handlers on multiple instantiations.
@@ -70,8 +140,18 @@ class ScriptLogger:
         self._logger.propagate = self._propagate
 
         if log_to_console:
+            if self._colorize:
+                console_formatter = _LevelColorFormatter(
+                    self.msg_format,
+                    self.date_format,
+                    color_map=self.level_colors,
+                    reset_code=self.reset_code,
+                )
+            else:
+                console_formatter = self._formatter
+
             stream_handler = logging.StreamHandler(sys.stdout)
-            stream_handler.setFormatter(self._formatter)
+            stream_handler.setFormatter(console_formatter)
             self._logger.addHandler(stream_handler)
 
         if log_to_file is not None:
@@ -87,6 +167,7 @@ class ScriptLogger:
         *,
         level: int = logging.INFO,
         propagate: bool = False,
+        colorize: bool = False,
     ) -> "ScriptLogger":
         """Create a console-only logger.
 
@@ -94,16 +175,19 @@ class ScriptLogger:
             name (str): Logger name.
             level (int): Logging level (default: INFO).
             propagate (bool): Whether to propagate to ancestor loggers.
+            colorize (bool): If True, colorizes the log level in console output.
 
         Returns:
             ScriptLogger: Configured logger instance.
         """
+
         return cls(
             name,
             level=level,
             log_to_console=True,
             log_to_file=None,
             propagate=propagate,
+            colorize=colorize,
         )
 
     @classmethod
@@ -114,6 +198,7 @@ class ScriptLogger:
         *,
         level: int = logging.INFO,
         propagate: bool = False,
+        colorize: bool = False,
     ) -> "ScriptLogger":
         """Create a logger that logs to both console and a file.
 
@@ -122,16 +207,19 @@ class ScriptLogger:
             log_file (Path | str): File path to log to.
             level (int): Logging level (default: INFO).
             propagate (bool): Whether to propagate to ancestor loggers.
+            colorize (bool): If True, colorizes the log level in console output.
 
         Returns:
             ScriptLogger: Configured logger instance.
         """
+
         return cls(
             name,
             level=level,
             log_to_console=True,
             log_to_file=log_file,
             propagate=propagate,
+            colorize=colorize,
         )
 
     @property
