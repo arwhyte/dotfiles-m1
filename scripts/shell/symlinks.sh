@@ -28,11 +28,11 @@ ln -nfs ${BASE_PATH}/psql/.psqlrc ${HOME}/.psqlrc
 
 # scripts
 rm -rf ${HOME}/update.sh
-ln -nfs ${BASE_PATH}/scripts/update.sh ${HOME}/update.sh
+ln -nfs ${BASE_PATH}/scripts/shell/update.sh ${HOME}/update.sh
 rm -rf ${HOME}/pg_upgrade.py
-ln -nfs ${BASE_PATH}/scripts/pg_upgrade.py ${HOME}/pg_upgrade.py
+ln -nfs ${BASE_PATH}/scripts/python/pg_upgrade.py ${HOME}/pg_upgrade.py
 rm -rf ${HOME}/update.py
-ln -nfs ${BASE_PATH}/scripts/update.py ${HOME}/update.py
+ln -nfs ${BASE_PATH}/scripts/python/update.py ${HOME}/update.py
 
 # zsh
 rm -rf ${HOME}/.zprofile
