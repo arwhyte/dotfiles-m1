@@ -2,14 +2,14 @@
 """
 Minimal PostgreSQL upgrade helper for macOS + Homebrew.
 
-Requirements:
-1. Use Homebrew to upgrade PostgreSQL.
+Features:
+1. Uses Homebrew to upgrade PostgreSQL.
 2. User MUST pass old and new versions: -o OLD -n NEW
-3. Use pg_dumpall to perform backup of existing databases.
-4. Stop old PostgreSQL service before upgrade.
-5. Initialize new data directory if it doesn't exist or is empty.
-6. Run pg_upgrade with correct old/new bindir and datadir.
-7. Log all actions to terminal + log file.
+3. Uses pg_dumpall to perform backup of existing databases.
+4. Stops old PostgreSQL service before upgrade.
+5. Initializes new data directory if it doesn't exist or is empty.
+6. Runs pg_upgrade with correct old/new bindir and datadir.
+7. Logs all actions to console and log file.
 """
 
 from __future__ import annotations
@@ -21,8 +21,11 @@ import sys
 
 from datetime import datetime
 from pathlib import Path
+from script_logger import ScriptLogger
 
-LOGGER = logging.getLogger("pg_upgrade")
+
+LOG_PATH = Path.cwd().joinpath("logs", "pg_upgrade.log")
+LOGGER = ScriptLogger.log_to_console_and_file("pg_upgrade", log_file=LOG_PATH)
 
 
 def parse_args() -> argparse.Namespace:
@@ -63,10 +66,10 @@ def run_cmd(cmd: list[str], logger: logging.Logger) -> None:
     """
 
     try:
-        logger.info("Running: %s", " ".join(cmd))
-        subprocess.run_cmd(cmd, check=True)
+        LOGGER.info("Running: %s", " ".join(cmd))
+        subprocess.run(cmd, check=True)
     except subprocess.CalledProcessError as e:
-        logger.error(
+        LOGGER.error(
             "Command failed with exit code %d: %s", e.returncode, " ".join(cmd)
         )
         sys.exit(e.returncode)
@@ -86,32 +89,12 @@ def main() -> int:
     old_ver = args.old_version
     new_ver = args.new_version
 
-    if not LOGGER.handlers:  # check if already configured
-        LOGGER.setLevel(logging.INFO)
-        LOGGER.propagate = False
-
-        log_file = Path.cwd().joinpath(f"pg_upgrade_{old_ver}_to_{new_ver}.log")
-
-        formatter = logging.Formatter(
-            "%(asctime)s [%(levelname)s] %(message)s", "%Y-%m-%d %H:%M:%S"
-        )
-
-        # console
-        stream_handler = logging.StreamHandler(sys.stdout)
-        stream_handler.setFormatter(formatter)
-        LOGGER.addHandler(stream_handler)
-
-        # file
-        file_handler = logging.FileHandler(log_file, encoding="utf-8")
-        file_handler.setFormatter(formatter)
-        LOGGER.addHandler(file_handler)
-
-    LOGGER.info("Logging to %s", log_file)
+    LOGGER.info("Logging to %s", LOG_PATH)
 
     LOGGER.info("Starting PostgreSQL upgrade: %s -> %s", old_ver, new_ver)
 
     # Homebrew prefix
-    brew_prefix = subprocess.run_cmd(
+    brew_prefix = subprocess.run(
         ["brew", "--prefix"], check=True, stdout=subprocess.PIPE, text=True
     ).stdout.strip()
 
@@ -135,7 +118,7 @@ def main() -> int:
     # Install new version of postgreSQL if not already installed
     LOGGER.info("Ensuring %s is installed via Homebrew...", new_formula)
 
-    result_new = subprocess.run_cmd(
+    result_new = subprocess.run(
         ["brew", "list", "--versions", new_formula],
         stdout=subprocess.PIPE,
         stderr=subprocess.DEVNULL,
@@ -172,7 +155,7 @@ def main() -> int:
     LOGGER.info("Backup file: %s", backup_file)
 
     with backup_file.open("w", encoding="utf-8") as f:
-        subprocess.run_cmd([str(pg_dumpall)], check=True, stdout=f)
+        subprocess.run([str(pg_dumpall)], check=True, stdout=f)
 
     LOGGER.info("Backup complete.")
 

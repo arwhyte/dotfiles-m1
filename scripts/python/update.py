@@ -4,21 +4,21 @@ Update Astral uv, uv tools, and Homebrew installs.
 
 This script is the Python equivalent of:
 
-- scripts/uv.sh
-- scripts/brew.sh
-- the wrapper script that calls both
+1. scripts/uv.sh
+2. scripts/brew.sh
+3. the wrapper script that calls both
 """
 
-import logging
 import subprocess
 import sys
 
 from pathlib import Path
+from script_logger import ScriptLogger
 
 
 HOME = Path.home()
 BREWFILE_PATH = HOME.joinpath("Development/github/arwhyte/dotfiles-m1/brew/Brewfile")
-LOGGER = logging.getLogger("update")
+LOGGER = ScriptLogger.log_to_console("update")
 
 
 def run_cmd(cmd: list[str], ignore_errors: bool = False) -> None:
@@ -117,20 +117,6 @@ def main() -> None:
     Returns:
         None
     """
-
-    if not LOGGER.handlers:  # already configured
-        LOGGER.setLevel(logging.INFO)
-        LOGGER.propagate = False
-
-        formatter = logging.Formatter(
-            "%(asctime)s [%(levelname)s] %(message)s", "%Y-%m-%d %H:%M:%S"
-        )
-
-        # Console
-        handler = logging.StreamHandler(sys.stdout)
-
-        handler.setFormatter(formatter)
-        LOGGER.addHandler(handler)
 
     LOGGER.info("Starting uv and brew update.")
 

@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-import logging
 import pathlib
 import shutil
-import sys
+
+from script_logger import ScriptLogger
 
 HOME: pathlib.Path = pathlib.Path("/Users/arwhyte")
 BASE_PATH: pathlib.Path = HOME / "Development/github/arwhyte/dotfiles-m1"
@@ -19,7 +19,6 @@ LINKS: tuple[tuple[pathlib.Path, pathlib.Path], ...] = (
     (HOME / ".zshenv", BASE_PATH / "zsh/.zshenv"),
     (HOME / ".zshrc", BASE_PATH / "zsh/.zshrc"),
 )
-LOGGER = logging.getLogger("symlinks")
 
 
 def create_symlink(src: pathlib.Path, dst: pathlib.Path) -> None:
@@ -52,23 +51,10 @@ def main() -> None:
         None
     """
 
-    if not LOGGER.handlers:  # already configured
-        LOGGER.setLevel(logging.INFO)
-        LOGGER.propagate = False
-
-        formatter = logging.Formatter(
-            "%(asctime)s [%(levelname)s] %(message)s", "%Y-%m-%d %H:%M:%S"
-        )
-
-        # Console
-        handler = logging.StreamHandler(sys.stdout)
-
-        handler.setFormatter(formatter)
-        LOGGER.addHandler(handler)
-
+    log = ScriptLogger("symlinks", log_to_console=True)
 
     for dst, src in LINKS:
-        LOGGER.info(f"Linking {dst} → {src}")
+        log.info(f"Linking {dst} → {src}")
         create_symlink(src, dst)
 
 
