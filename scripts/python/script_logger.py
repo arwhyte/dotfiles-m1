@@ -235,7 +235,6 @@ class ScriptLogger:
 
         return self._logger
 
-    # delegate common logging methods
     def debug(self, msg: str, *args, **kwargs) -> None:
         """Log a debug message.
 
