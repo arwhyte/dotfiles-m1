@@ -17,16 +17,16 @@ from script_logger import ScriptLogger
 
 
 HOME = Path.home()
-BREWFILE_PATH = HOME.joinpath("Development/github/arwhyte/dotfiles-m1/brew/Brewfile")
-LOGGER = ScriptLogger.log_to_console("update", colorize=True)
+BREWFILE_PATH = HOME / "Development/github/arwhyte/dotfiles-m1/brew/Brewfile"
 
 
-def run_cmd(cmd: list[str], ignore_errors: bool = False) -> None:
+def run_cmd(cmd: list[str], logger: ScriptLogger, ignore_errors: bool = False) -> None:
     """Run a command, streaming output directly.
     Exit immediately if the command fails (set -e behavior), unless ignore_errors is True.
 
     Parameters:
         cmd (list[str]): Command and arguments to run.
+        logger: The logger instance to use for logging messages.
         ignore_errors (bool): If True, log errors but do not exit on failure.
 
     Returns:
@@ -37,75 +37,67 @@ def run_cmd(cmd: list[str], ignore_errors: bool = False) -> None:
         subprocess.run(cmd, check=True)
     except subprocess.CalledProcessError as e:
         if ignore_errors:
-            LOGGER.warning("Command exited with %s: %s", e.returncode, " ".join(cmd))
+            logger.warning("Command exited with %s: %s", e.returncode, " ".join(cmd))
         else:
-            LOGGER.error(
+            logger.error(
                 "Command failed with exit code %d: %s", e.returncode, " ".join(cmd)
             )
             sys.exit(e.returncode)
 
 
-def update_brew() -> None:
+def update_brew(logger: ScriptLogger) -> None:
     """Replicates brew.sh behavior.
 
     Parameters:
-        None
+        logger: The logger instance to use for logging messages.
 
     Returns:
         None
     """
 
-    LOGGER.info("HOMEBREW INSTALLED PACKAGES/CASKS (brew list)")
-    run_cmd(["brew", "list"])
+    logger.info("HOMEBREW INSTALLED PACKAGES/CASKS (brew list)")
+    run_cmd(["brew", "list"], logger)
 
-    LOGGER.info("HOMEBREW OUTDATED PACKAGES/CASKS (brew outdated)")
-    run_cmd(["brew", "outdated"])
+    logger.info("HOMEBREW OUTDATED PACKAGES/CASKS (brew outdated)")
+    run_cmd(["brew", "outdated"], logger)
 
-    LOGGER.info("AUTOREMOVE UNUSED PACKAGE DEPENDENCIES (brew autoremove)")
-    run_cmd(["brew", "autoremove"])
+    logger.info("AUTOREMOVE UNUSED PACKAGE DEPENDENCIES (brew autoremove)")
+    run_cmd(["brew", "autoremove"], logger)
 
-    LOGGER.info("UPDATE HOMEBREW PACKAGES/CASKS (brew update)")
-    run_cmd(["brew", "update"])
+    logger.info("UPDATE HOMEBREW PACKAGES/CASKS (brew update)")
+    run_cmd(["brew", "update"], logger)
 
-    LOGGER.info("UPGRADE HOMEBREW PACKAGES/CASKS (brew upgrade --greedy)")
-    run_cmd(["brew", "upgrade", "--greedy"])
+    logger.info("UPGRADE HOMEBREW PACKAGES/CASKS (brew upgrade --greedy)")
+    run_cmd(["brew", "upgrade", "--greedy"], logger)
 
-    LOGGER.info("CHECK HOMEBREW INSTALLS (brew doctor)")
-    run_cmd(["brew", "doctor"], ignore_errors=True)
+    logger.info("CHECK HOMEBREW INSTALLS (brew doctor)")
+    run_cmd(["brew", "doctor"], logger, ignore_errors=True)
 
-    LOGGER.info("CLEANUP HOMEBREW (brew cleanup)")
-    run_cmd(["brew", "cleanup"])
+    logger.info("CLEANUP HOMEBREW (brew cleanup)")
+    run_cmd(["brew", "cleanup"], logger)
 
-    LOGGER.info(f"DUMP HOMEBREW INSTALLS TO {BREWFILE_PATH} (brew bundle dump)")
-    run_cmd(
-        [
-            "brew",
-            "bundle",
-            "dump",
-            "--force",
-            f"--file={BREWFILE_PATH}",
-        ]
-    )
+    logger.info("DUMP HOMEBREW INSTALLS TO %s (brew bundle dump)", BREWFILE_PATH)
+    run_cmd(["brew", "bundle", "dump", "--force", f"--file={BREWFILE_PATH}"], logger)
 
-    LOGGER.info("HOMEBREW MANAGED SERVICES (brew services list)")
-    run_cmd(["brew", "services", "list"])
+    logger.info("HOMEBREW MANAGED SERVICES (brew services list)")
+    run_cmd(["brew", "services", "list"], logger)
 
 
-def update_uv() -> None:
+def update_uv(logger: ScriptLogger) -> None:
     """Replicates uv.sh behavior.
 
     Parameters:
-        None
+        logger: The logger instance to use for logging messages.
 
     Returns:
         None
     """
 
-    LOGGER.info("UPDATE UV")
-    run_cmd(["uv", "self", "update"])
+    logger.info("UPDATE UV")
+    run_cmd(["uv", "self", "update"], logger)
 
-    LOGGER.info("UPDATE UV TOOLS")
-    run_cmd(["uv", "tool", "update", "--all"])
+    logger.info("UPDATE UV TOOLS")
+    run_cmd(["uv", "tool", "update", "--all"], logger)
 
 
 def main() -> None:
@@ -118,13 +110,15 @@ def main() -> None:
         None
     """
 
-    LOGGER.info("Starting uv and brew update.")
+    logger = ScriptLogger.log_to_console("update", colorize=True)
 
-    LOGGER.info("UPDATE ASTRAL UV AND UV TOOL (ALL)")
-    update_uv()
+    logger.info("Starting uv and brew update.")
 
-    LOGGER.info("UPDATE/UPGRADE HOMEBREW PACKAGES/CASKS")
-    update_brew()
+    logger.info("UPDATE ASTRAL UV AND UV TOOL (ALL)")
+    update_uv(logger)
+
+    logger.info("UPDATE/UPGRADE HOMEBREW PACKAGES/CASKS")
+    update_brew(logger)
 
 
 if __name__ == "__main__":
