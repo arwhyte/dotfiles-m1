@@ -112,7 +112,7 @@ def main() -> None:
 
     logger = ScriptLogger.log_to_console("update", colorize=True)
 
-    logger.info("Starting uv and brew update.")
+    logger.info("STARTING UV AND BREW UPDATE/UPGRADE.")
 
     logger.info("UPDATE ASTRAL UV AND UV TOOL (ALL)")
     update_uv(logger)
