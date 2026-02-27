@@ -68,10 +68,10 @@ def run_cmd(cmd: list[str], logger: logging.Logger) -> None:
     """
 
     try:
-        LOGGER.info("Running: %s", " ".join(cmd))
+        logger.info("Running: %s", " ".join(cmd))
         subprocess.run(cmd, check=True)
     except subprocess.CalledProcessError as e:
-        LOGGER.error(
+        logger.error(
             "Command failed with exit code %d: %s", e.returncode, " ".join(cmd)
         )
         sys.exit(e.returncode)
@@ -129,7 +129,7 @@ def main() -> int:
 
     if result_new.returncode != 0:
         LOGGER.info("%s not installed. Installing with Homebrew...", new_formula)
-        run_cmd(["brew", "install", new_formula], LOGGER)
+        run_cmd(["brew", "install", new_formula], LOGGER.logger)
     else:
         LOGGER.info("%s already installed.", new_formula)
 
@@ -142,7 +142,7 @@ def main() -> int:
     )
 
     # If it's already running, this is a no-op; if not, it starts it.
-    run_cmd(["brew", "services", "start", old_formula], LOGGER)
+    run_cmd(["brew", "services", "start", old_formula], LOGGER.logger)
 
     # Backup existing data with pg_dumpall
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -162,14 +162,14 @@ def main() -> int:
     LOGGER.info("Backup complete.")
 
     # Stop PostgreSQL service
-    run_cmd(["brew", "services", "stop", old_formula], LOGGER)
+    run_cmd(["brew", "services", "stop", old_formula], LOGGER.logger)
 
     # Initialize new data directory if it doesn't exist or is empty
     initdb = new_bindir / "initdb"
     LOGGER.info("Initializing new data directory (if empty): %s", new_datadir)
 
     if not new_datadir.exists() or not any(new_datadir.iterdir()):
-        run_cmd([str(initdb), "-D", str(new_datadir)], LOGGER)
+        run_cmd([str(initdb), "-D", str(new_datadir)], LOGGER.logger)
     else:
         LOGGER.info("Data directory exists; skipping initdb.")
 
@@ -184,11 +184,11 @@ def main() -> int:
             f"--old-datadir={old_datadir}",
             f"--new-datadir={new_datadir}",
         ],
-        LOGGER,
+        LOGGER.logger,
     )
 
     # Start new PostgreSQL service
-    run_cmd(["brew", "services", "start", new_formula], LOGGER)
+    run_cmd(["brew", "services", "start", new_formula], LOGGER.logger)
 
     LOGGER.info("Upgrade complete: %s -> %s", old_ver, new_ver)
     LOGGER.info("Backup stored at: %s", backup_file)
