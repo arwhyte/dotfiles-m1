@@ -21,7 +21,7 @@ import sys
 from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
-from script_logger import ScriptLogger
+from event_logger import EventLogger
 
 
 LOG_PATH = Path.cwd() / "logs" / "pg_upgrade.log"
@@ -90,11 +90,11 @@ def parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
-def get_brew_prefix(logger: ScriptLogger) -> Path:
+def get_brew_prefix(logger: EventLogger) -> Path:
     """Return the Homebrew installation prefix as a Path.
 
     Parameters:
-        logger (ScriptLogger): Logger instance for logging.
+        logger (EventLogger): Logger instance for logging.
 
     Returns:
         Path: The Homebrew prefix path.
@@ -108,12 +108,12 @@ def get_brew_prefix(logger: ScriptLogger) -> Path:
     return prefix
 
 
-def run_cmd(cmd: list[str], logger: ScriptLogger) -> None:
+def run_cmd(cmd: list[str], logger: EventLogger) -> None:
     """Run a command and log it.
 
     Parameters:
         cmd (list[str]): Command and arguments to run.
-        logger (ScriptLogger): Logger instance for logging.
+        logger (EventLogger): Logger instance for logging.
 
     Returns:
         None
@@ -129,12 +129,12 @@ def run_cmd(cmd: list[str], logger: ScriptLogger) -> None:
         sys.exit(e.returncode)
 
 
-def install_brew_formula(formula: str, logger: ScriptLogger) -> None:
+def install_brew_formula(formula: str, logger: EventLogger) -> None:
     """Install a Homebrew formula if not already installed.
 
     Parameters:
         formula (str): The Homebrew formula name to check and install.
-        logger (ScriptLogger): Logger instance for logging.
+        logger (EventLogger): Logger instance for logging.
 
     Returns:
         None
@@ -154,13 +154,13 @@ def install_brew_formula(formula: str, logger: ScriptLogger) -> None:
         logger.info("%s already installed.", formula)
 
 
-def backup_pg_databases(pg_dumpall: Path, backup_file: Path, logger: ScriptLogger) -> None:
+def backup_pg_databases(pg_dumpall: Path, backup_file: Path, logger: EventLogger) -> None:
     """Back up all databases using pg_dumpall.
 
     Parameters:
         pg_dumpall (Path): Path to the pg_dumpall binary.
         backup_file (Path): Destination file for the SQL dump.
-        logger (ScriptLogger): Logger instance for logging.
+        logger (EventLogger): Logger instance for logging.
 
     Returns:
         None
@@ -180,13 +180,13 @@ def backup_pg_databases(pg_dumpall: Path, backup_file: Path, logger: ScriptLogge
     logger.info("Backup complete.")
 
 
-def init_new_datadir(initdb: Path, datadir: Path, logger: ScriptLogger) -> None:
+def init_new_datadir(initdb: Path, datadir: Path, logger: EventLogger) -> None:
     """Initialize new PostgreSQL data directory if it doesn't exist or is empty.
 
     Parameters:
         initdb (Path): Path to the initdb binary.
         datadir (Path): Path to the new data directory.
-        logger (ScriptLogger): Logger instance for logging.
+        logger (EventLogger): Logger instance for logging.
 
     Returns:
         None
@@ -216,7 +216,7 @@ def main() -> int:
     new_ver = args.new_version
 
     # 2.0 Logger setup
-    logger = ScriptLogger.log_to_console_and_file(
+    logger = EventLogger.log_to_console_and_file(
         "pg_upgrade", log_file=LOG_PATH, colorize=True
     )
     logger.info("Logging to %s", LOG_PATH)

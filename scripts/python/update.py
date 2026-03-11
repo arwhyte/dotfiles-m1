@@ -13,14 +13,14 @@ import subprocess
 import sys
 
 from pathlib import Path
-from script_logger import ScriptLogger
+from event_logger import EventLogger
 
 
 HOME = Path.home()
 BREWFILE_PATH = HOME / "Development/github/arwhyte/dotfiles-m1/brew/Brewfile"
 
 
-def run_cmd(cmd: list[str], logger: ScriptLogger, ignore_errors: bool = False) -> None:
+def run_cmd(cmd: list[str], logger: EventLogger, ignore_errors: bool = False) -> None:
     """Run a command, streaming output directly.
     Exit immediately if the command fails (set -e behavior), unless ignore_errors is True.
 
@@ -45,7 +45,7 @@ def run_cmd(cmd: list[str], logger: ScriptLogger, ignore_errors: bool = False) -
             sys.exit(e.returncode)
 
 
-def update_brew(logger: ScriptLogger) -> None:
+def update_brew(logger: EventLogger) -> None:
     """Replicates brew.sh behavior.
 
     Parameters:
@@ -83,7 +83,7 @@ def update_brew(logger: ScriptLogger) -> None:
     run_cmd(["brew", "services", "list"], logger)
 
 
-def update_uv(logger: ScriptLogger) -> None:
+def update_uv(logger: EventLogger) -> None:
     """Replicates uv.sh behavior.
 
     Parameters:
@@ -110,7 +110,7 @@ def main() -> None:
         None
     """
 
-    logger = ScriptLogger.log_to_console("update", colorize=True)
+    logger = EventLogger.log_to_console("update", colorize=True)
 
     logger.info("STARTING UV AND BREW UPDATE/UPGRADE.")
 

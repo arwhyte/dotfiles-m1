@@ -59,7 +59,7 @@ class _LevelColorFormatter(logging.Formatter):
             record.levelname = original_levelname
 
 
-class ScriptLogger:
+class EventLogger:
     """Helper class to create and manage loggers for scripts with consistent formatting.
 
     Attributes:
@@ -168,7 +168,7 @@ class ScriptLogger:
         level: int = logging.INFO,
         propagate: bool = False,
         colorize: bool = False,
-    ) -> "ScriptLogger":
+    ) -> "EventLogger":
         """Create a console-only logger.
 
         Parameters:
@@ -178,7 +178,7 @@ class ScriptLogger:
             colorize (bool): If True, colorizes the log level in console output.
 
         Returns:
-            ScriptLogger: Configured logger instance.
+            EventLogger: Configured logger instance.
         """
 
         return cls(
@@ -199,7 +199,7 @@ class ScriptLogger:
         level: int = logging.INFO,
         propagate: bool = False,
         colorize: bool = False,
-    ) -> "ScriptLogger":
+    ) -> "EventLogger":
         """Create a logger that logs to both console and a file.
 
         Parameters:
@@ -210,7 +210,7 @@ class ScriptLogger:
             colorize (bool): If True, colorizes the log level in console output.
 
         Returns:
-            ScriptLogger: Configured logger instance.
+            EventLogger: Configured logger instance.
         """
 
         return cls(

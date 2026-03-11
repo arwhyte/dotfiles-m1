@@ -3,7 +3,7 @@ import pathlib
 import shutil
 
 from dataclasses import dataclass
-from script_logger import ScriptLogger
+from event_logger import EventLogger
 
 
 HOME: pathlib.Path = pathlib.Path.home()
@@ -70,7 +70,7 @@ def main() -> None:
         None
     """
 
-    log = ScriptLogger("symlinks", log_to_console=True, colorize=True)
+    log = EventLogger("symlinks", log_to_console=True, colorize=True)
 
     path_pairs: tuple[SymlinkPair, ...] = (
         SymlinkPair(src=GIT_PATH / ".gitconfig", dst=HOME / ".gitconfig"),
