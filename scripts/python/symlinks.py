@@ -2,8 +2,8 @@
 import pathlib
 import shutil
 
+from arrakha import EventLogger
 from dataclasses import dataclass
-from event_logger import EventLogger
 
 
 HOME: pathlib.Path = pathlib.Path.home()

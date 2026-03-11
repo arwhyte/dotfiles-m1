@@ -62,4 +62,5 @@ alias pip_update_venv='python -m pip freeze | cut -d= -f1 | xargs -n1 python -m 
 #       --show-absolute-path --show-error-codes --show-error-context --pretty"
 
 # uv
+alias upd='uv run --project $HOME/Development/github/arwhyte/dotfiles-m1 python $HOME/update.py'
 alias vnv='uv venv --python --managed-python && source .venv/bin/activate'

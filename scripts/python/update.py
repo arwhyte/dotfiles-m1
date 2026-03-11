@@ -12,8 +12,8 @@ This script is the Python equivalent of:
 import subprocess
 import sys
 
+from arrakha import EventLogger
 from pathlib import Path
-from event_logger import EventLogger
 
 
 HOME = Path.home()

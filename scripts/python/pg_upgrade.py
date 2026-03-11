@@ -18,10 +18,10 @@ import argparse
 import subprocess
 import sys
 
+from arrakha import EventLogger
 from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
-from event_logger import EventLogger
 
 
 LOG_PATH = Path.cwd() / "logs" / "pg_upgrade.log"
@@ -154,7 +154,9 @@ def install_brew_formula(formula: str, logger: EventLogger) -> None:
         logger.info("%s already installed.", formula)
 
 
-def backup_pg_databases(pg_dumpall: Path, backup_file: Path, logger: EventLogger) -> None:
+def backup_pg_databases(
+    pg_dumpall: Path, backup_file: Path, logger: EventLogger
+) -> None:
     """Back up all databases using pg_dumpall.
 
     Parameters:
