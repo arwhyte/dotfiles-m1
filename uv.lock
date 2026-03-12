@@ -5,9 +5,10 @@ requires-python = ">=3.14.2"
 [[package]]
 name = "arrakha"
 version = "0.1.0"
-source = { path = "../arrakha/dist/arrakha-0.1.0-py3-none-any.whl" }
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/2b/2f/fa1f0d4b30cfdf0cb10629200bf70eb84b64afdc7c5e87e213bfc0a104c7/arrakha-0.1.0.tar.gz", hash = "sha256:233e2372f9125d2e89187f7674618e0634102e7767759580a72139d49ef30f33", size = 3855, upload-time = "2026-03-11T21:21:52.941Z" }
 wheels = [
-    { filename = "arrakha-0.1.0-py3-none-any.whl", hash = "sha256:e8203641d5776f098db5ea984d180121a5d79af94814c8379c1dfa3c6692b543" },
+    { url = "https://files.pythonhosted.org/packages/27/24/15f72072b433cbf393508a451d258398cbe8520d6aa47dc47859177306b4/arrakha-0.1.0-py3-none-any.whl", hash = "sha256:e8203641d5776f098db5ea984d180121a5d79af94814c8379c1dfa3c6692b543", size = 4991, upload-time = "2026-03-11T21:21:53.923Z" },
 ]
 
 [[package]]
@@ -19,4 +20,4 @@ dependencies = [
 ]
 
 [package.metadata]
-requires-dist = [{ name = "arrakha", path = "../arrakha/dist/arrakha-0.1.0-py3-none-any.whl" }]
+requires-dist = [{ name = "arrakha", specifier = ">=0.1.0" }]
