@@ -96,8 +96,11 @@ def update_uv(logger: EventLogger) -> None:
     logger.info("UPDATE UV")
     run_cmd(["uv", "self", "update"], logger)
 
-    logger.info("UPDATE UV TOOLS")
-    run_cmd(["uv", "tool", "update", "--all"], logger)
+    logger.info("LIST OUTDATED UV TOOLS")
+    run_cmd(["uv", "tool", "list", "--outdated"], logger)
+
+    logger.info("UPGRADE UV TOOLS")
+    run_cmd(["uv", "tool", "upgrade", "--all", "--exclude-newer", "P7D"], logger)
 
 
 def main() -> None:
